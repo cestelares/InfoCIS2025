@@ -286,15 +286,15 @@ Ejecucion,ZONAL VIRTUAL,CAMPUS VIRTUAL,2025,2025-06-22,2025-07-20,INGL,25
         function updateCampusFilter() {
             const selectedZonal = document.getElementById('zonal-filter').value;
             const campusFilter = document.getElementById('campus-filter');
+            const activePeriodoBtn = document.querySelector('#periodo-filter button.active');
+            if (!activePeriodoBtn) return;
+            const selectedPeriodo = parseInt(activePeriodoBtn.dataset.periodo);
             
             let campusOptions;
             if (selectedZonal === 'Todos los Zonales') {
-                const activePeriodoBtn = document.querySelector('#periodo-filter button.active');
-                if (!activePeriodoBtn) return;
-                const selectedPeriodo = parseInt(activePeriodoBtn.dataset.periodo);
                 campusOptions = ['Todos los Campus', ...new Set(fullData.filter(item => item.periodo === selectedPeriodo).map(item => item.campus))].sort();
             } else {
-                campusOptions = ['Todos los Campus', ...new Set(fullData.filter(item => item.zonal === selectedZonal).map(item => item.campus))].sort();
+                campusOptions = ['Todos los Campus', ...new Set(fullData.filter(item => item.zonal === selectedZonal && item.periodo === selectedPeriodo).map(item => item.campus))].sort();
             }
             
             campusFilter.innerHTML = campusOptions.map(c => `<option value="${c}">${c}</option>`).join('');
