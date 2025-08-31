@@ -102,30 +102,154 @@
     </div>
 
     <script>
-        const dataUrl = 'https://docs.google.com/spreadsheets/d/e/2PACX-1vQ5a-m_g-1JtZ_3Qj-9H5k_gL/pub?gid=0&single=true&output=csv';
+        const csvData = `Estado,ZONAL,CAMPUS,PERIODO,INICIO,FIN,MATERIA,PARTICIPANTES
+Ejecucion,ZONAL LAMBAYEQUE,CFP CHICLAYO,2022,2022-10-31,2022-11-18,INGL,20
+Ejecucion,ZONAL LAMBAYEQUE,CFP CHICLAYO,2022,2022-11-04,2022-11-24,INGL,6
+Ejecucion,ZONAL LAMBAYEQUE,CFP CHICLAYO,2022,2022-12-06,2022-12-29,INGL,11
+Ejecucion,ZONAL LAMBAYEQUE,CFP CHICLAYO,2022,2022-11-30,2022-12-21,INGL,2
+Ejecucion,ZONAL LAMBAYEQUE,CFP CHICLAYO,2022,2022-05-05,2022-05-26,INGL,17
+Ejecucion,ZONAL LAMBAYEQUE,CFP CHICLAYO,2022,2022-06-07,2022-06-28,INGL,15
+Ejecucion,ZONAL LAMBAYEQUE,CFP CHICLAYO,2022,2022-06-09,2022-06-30,INGL,18
+Ejecucion,ZONAL LAMBAYEQUE,CFP CHICLAYO,2022,2022-07-12,2022-08-02,INGL,21
+Ejecucion,ZONAL LAMBAYEQUE,CFP CHICLAYO,2022,2022-07-14,2022-08-04,INGL,19
+Ejecucion,ZONAL LAMBAYEQUE,CFP CHICLAYO,2022,2022-08-16,2022-09-06,INGL,18
+Ejecucion,ZONAL LAMBAYEQUE,CFP CHICLAYO,2022,2022-09-07,2022-09-28,INGL,25
+Ejecucion,ZONAL LAMBAYEQUE,CFP CHICLAYO,2022,2022-09-20,2022-10-11,INGL,16
+Ejecucion,ZONAL LAMBAYEQUE,CFP CHICLAYO,2022,2022-09-21,2022-10-12,INGL,22
+Ejecucion,ZONAL LAMBAYEQUE,CFP CHICLAYO,2022,2022-10-25,2022-11-15,INGL,20
+Ejecucion,ZONAL PIURA-TUMBES,UCP PIURA-ZI,2022,2022-11-23,2022-12-21,INTE,25
+Ejecucion,ZONAL PIURA-TUMBES,UCP PIURA-ZI,2022,2022-02-09,2022-03-09,INTE,25
+Ejecucion,ZONAL PIURA-TUMBES,UCP PIURA-ZI,2022,2022-03-16,2022-04-13,INTE,25
+Ejecucion,ZONAL PIURA-TUMBES,UCP PIURA-ZI,2022,2022-05-04,2022-06-01,INTE,25
+Ejecucion,ZONAL PIURA-TUMBES,UCP PIURA-ZI,2022,2022-06-08,2022-07-06,INTE,25
+Ejecucion,ZONAL PIURA-TUMBES,UCP PIURA-ZI,2022,2022-07-20,2022-08-17,INTE,25
+Ejecucion,ZONAL PIURA-TUMBES,UCP PIURA-ZI,2022,2022-08-31,2022-09-28,INTE,25
+Ejecucion,ZONAL PIURA-TUMBES,UCP PIURA-ZI,2022,2022-10-05,2022-11-02,INTE,25
+Ejecucion,ZONAL PIURA-TUMBES,UCP PIURA-ZI,2022,2022-11-09,2022-12-07,INTE,25
+Ejecucion,ZONAL LA LIBERTAD,UCP TRUJILLO ETI IDIOMAS,2022,2022-09-26,2022-10-21,INTE,27
+Ejecucion,ZONAL LA LIBERTAD,UCP TRUJILLO ETI IDIOMAS,2022,2022-10-24,2022-11-21,INTE,29
+Ejecucion,ZONAL LA LIBERTAD,UCP TRUJILLO ETI IDIOMAS,2022,2022-11-28,2022-12-23,INTE,30
+Ejecucion,ZONAL VIRTUAL,CAMPUS VIRTUAL,2022,2022-09-18,2022-10-16,INGL,26
+Ejecucion,ZONAL VIRTUAL,CAMPUS VIRTUAL,2022,2022-10-23,2022-11-20,INGL,27
+Ejecucion,ZONAL VIRTUAL,CAMPUS VIRTUAL,2022,2022-11-27,2022-12-25,INGL,25
+Ejecucion,ZONAL VIRTUAL,CAMPUS VIRTUAL,2022,2022-01-02,2022-01-30,INGL,25
+Ejecucion,ZONAL VIRTUAL,CAMPUS VIRTUAL,2022,2022-02-06,2022-03-06,INGL,25
+Ejecucion,ZONAL VIRTUAL,CAMPUS VIRTUAL,2022,2022-03-13,2022-04-10,INGL,26
+Ejecucion,ZONAL VIRTUAL,CAMPUS VIRTUAL,2022,2022-04-17,2022-05-15,INGL,25
+Ejecucion,ZONAL VIRTUAL,CAMPUS VIRTUAL,2022,2022-05-22,2022-06-19,INGL,25
+Ejecucion,ZONAL VIRTUAL,CAMPUS VIRTUAL,2022,2022-06-26,2022-07-24,INGL,25
+Ejecucion,ZONAL VIRTUAL,CAMPUS VIRTUAL,2022,2022-07-31,2022-08-28,INGL,27
+Ejecucion,ZONAL VIRTUAL,CAMPUS VIRTUAL,2022,2022-09-04,2022-10-02,INGL,28
+Ejecucion,ZONAL LIMA CALLAO,CFP LUIS CACERES GRAZIANI,2025,2025-01-09,2025-01-29,INGL,24
+Ejecucion,ZONAL LIMA CALLAO,CFP LUIS CACERES GRAZIANI,2025,2025-01-08,2025-01-28,INGL,20
+Ejecucion,ZONAL LIMA CALLAO,CFP LUIS CACERES GRAZIANI,2025,2025-02-13,2025-03-05,INGL,18
+Ejecucion,ZONAL LIMA CALLAO,CFP LUIS CACERES GRAZIANI,2025,2025-02-12,2025-03-04,INGL,14
+Ejecucion,ZONAL LIMA CALLAO,CFP LUIS CACERES GRAZIANI,2025,2025-03-13,2025-04-02,INGL,20
+Ejecucion,ZONAL LIMA CALLAO,CFP LUIS CACERES GRAZIANI,2025,2025-03-12,2025-04-01,INGL,20
+Ejecucion,ZONAL LIMA CALLAO,CFP LUIS CACERES GRAZIANI,2025,2025-04-10,2025-04-30,INGL,15
+Ejecucion,ZONAL LIMA CALLAO,CFP LUIS CACERES GRAZIANI,2025,2025-04-09,2025-04-29,INGL,15
+Ejecucion,ZONAL LIMA CALLAO,CFP LUIS CACERES GRAZIANI,2025,2025-05-08,2025-05-28,INGL,20
+Ejecucion,ZONAL LIMA CALLAO,CFP LUIS CACERES GRAZIANI,2025,2025-05-07,2025-05-27,INGL,20
+Ejecucion,ZONAL LIMA CALLAO,CFP LUIS CACERES GRAZIANI,2025,2025-06-05,2025-06-25,INGL,15
+Ejecucion,ZONAL LIMA CALLAO,CFP LUIS CACERES GRAZIANI,2025,2025-06-04,2025-06-24,INGL,15
+Ejecucion,ZONAL LIMA CALLAO,CFP LUIS CACERES GRAZIANI,2025,2025-07-03,2025-07-23,INGL,20
+Ejecucion,ZONAL LIMA CALLAO,CFP LUIS CACERES GRAZIANI,2025,2025-07-02,2025-07-22,INGL,20
+Ejecucion,ZONAL LIMA CALLAO,CFP LUIS CACERES GRAZIANI,2025,2025-07-31,2025-08-20,INGL,15
+Ejecucion,ZONAL LIMA CALLAO,CFP LUIS CACERES GRAZIANI,2025,2025-07-30,2025-08-19,INGL,15
+Ejecucion,ZONAL LIMA CALLAO,CFP LUIS CACERES GRAZIANI,2025,2025-08-28,2025-09-17,INGL,15
+Ejecucion,ZONAL LIMA CALLAO,CFP LUIS CACERES GRAZIANI,2025,2025-08-27,2025-09-16,INGL,15
+Ejecucion,ZONAL LIMA CALLAO,CFP LUIS CACERES GRAZIANI,2025,2025-09-25,2025-10-15,INGL,20
+Ejecucion,ZONAL LIMA CALLAO,CFP LUIS CACERES GRAZIANI,2025,2025-09-24,2025-10-14,INGL,20
+Ejecucion,ZONAL LIMA CALLAO,CFP LUIS CACERES GRAZIANI,2025,2025-10-23,2025-11-12,INGL,15
+Ejecucion,ZONAL LIMA CALLAO,CFP LUIS CACERES GRAZIANI,2025,2025-10-22,2025-11-11,INGL,15
+Ejecucion,ZONAL LIMA CALLAO,CFP LUIS CACERES GRAZIANI,2025,2025-11-20,2025-12-10,INGL,15
+Ejecucion,ZONAL LIMA CALLAO,CFP LUIS CACERES GRAZIANI,2025,2025-11-19,2025-12-09,INGL,15
+Ejecucion,ZONAL LIMA CALLAO,CFP LUIS CACERES GRAZIANI,2025,2025-12-18,2026-01-07,INGL,20
+Ejecucion,ZONAL LIMA CALLAO,CFP LUIS CACERES GRAZIANI,2025,2025-12-17,2026-01-06,INGL,20
+Ejecucion,ZONAL LAMBAYEQUE,CFP CHICLAYO,2025,2025-01-23,2025-02-12,INGL,19
+Ejecucion,ZONAL LAMBAYEQUE,CFP CHICLAYO,2025,2025-01-24,2025-02-13,INGL,10
+Ejecucion,ZONAL LAMBAYEQUE,CFP CHICLAYO,2025,2025-02-24,2025-03-17,INGL,22
+Ejecucion,ZONAL LAMBAYEQUE,CFP CHICLAYO,2025,2025-03-03,2025-03-24,INGL,21
+Ejecucion,ZONAL LAMBAYEQUE,CFP CHICLAYO,2025,2025-03-27,2025-04-16,INGL,20
+Ejecucion,ZONAL LAMBAYEQUE,CFP CHICLAYO,2025,2025-04-21,2025-05-12,INGL,23
+Ejecucion,ZONAL LAMBAYEQUE,CFP CHICLAYO,2025,2025-05-15,2025-06-04,INGL,20
+Ejecucion,ZONAL LAMBAYEQUE,CFP CHICLAYO,2025,2025-06-09,2025-06-30,INGL,19
+Ejecucion,ZONAL LAMBAYEQUE,CFP CHICLAYO,2025,2025-07-03,2025-07-23,INGL,21
+Ejecucion,ZONAL LAMBAYEQUE,CFP CHICLAYO,2025,2025-07-28,2025-08-18,INGL,22
+Ejecucion,ZONAL LAMBAYEQUE,CFP CHICLAYO,2025,2025-08-21,2025-09-10,INGL,20
+Ejecucion,ZONAL LAMBAYEQUE,CFP CHICLAYO,2025,2025-09-15,2025-10-06,INGL,25
+Ejecucion,ZONAL LAMBAYEQUE,CFP CHICLAYO,2025,2025-10-09,2025-10-29,INGL,23
+Ejecucion,ZONAL LAMBAYEQUE,CFP CHICLAYO,2025,2025-11-03,2025-11-24,INGL,21
+Ejecucion,ZONAL LAMBAYEQUE,CFP CHICLAYO,2025,2025-11-27,2025-12-17,INGL,20
+Ejecucion,ZONAL PIURA-TUMBES,UCP PIURA-ZI,2025,2025-02-05,2025-03-05,INTE,25
+Ejecucion,ZONAL PIURA-TUMBES,UCP PIURA-ZI,2025,2025-03-12,2025-04-09,INTE,25
+Ejecucion,ZONAL PIURA-TUMBES,UCP PIURA-ZI,2025,2025-04-23,2025-05-21,INTE,25
+Ejecucion,ZONAL PIURA-TUMBES,UCP PIURA-ZI,2025,2025-05-28,2025-06-25,INTE,25
+Ejecucion,ZONAL PIURA-TUMBES,UCP PIURA-ZI,2025,2025-07-02,2025-07-30,INTE,25
+Ejecucion,ZONAL PIURA-TUMBES,UCP PIURA-ZI,2025,2025-08-06,2025-09-03,INTE,0
+Ejecucion,ZONAL PIURA-TUMBES,UCP PIURA-ZI,2025,2025-09-10,2025-10-08,INTE,25
+Ejecucion,ZONAL PIURA-TUMBES,UCP PIURA-ZI,2025,2025-10-15,2025-11-12,INTE,25
+Ejecucion,ZONAL PIURA-TUMBES,UCP PIURA-ZI,2025,2025-11-19,2025-12-17,INTE,25
+Ejecucion,ZONAL PIURA-TUMBES,UCP PIURA-ZI,2025,2025-01-08,2025-02-05,INTE,25
+Ejecucion,ZONAL PIURA-TUMBES,UCP SULLANA,2025,2025-01-29,2025-02-25,INTE,28
+Ejecucion,ZONAL PIURA-TUMBES,UCP SULLANA,2025,2025-03-05,2025-04-01,INTE,27
+Ejecucion,ZONAL PIURA-TUMBES,UCP SULLANA,2025,2025-04-09,2025-05-06,INTE,28
+Ejecucion,ZONAL PIURA-TUMBES,UCP SULLANA,2025,2025-05-14,2025-06-10,INTE,27
+Ejecucion,ZONAL PIURA-TUMBES,UCP SULLANA,2025,2025-06-18,2025-07-15,INTE,28
+Ejecucion,ZONAL PIURA-TUMBES,UCP SULLANA,2025,2025-07-23,2025-08-19,INTE,27
+Ejecucion,ZONAL PIURA-TUMBES,UCP SULLANA,2025,2025-08-27,2025-09-23,INTE,28
+Ejecucion,ZONAL PIURA-TUMBES,UCP SULLANA,2025,2025-10-01,2025-10-28,INTE,27
+Ejecucion,ZONAL PIURA-TUMBES,UCP SULLANA,2025,2025-11-05,2025-12-02,INTE,28
+Ejecucion,ZONAL PIURA-TUMBES,UCP SULLANA,2025,2025-12-10,2026-01-06,INTE,27
+Ejecucion,ZONAL PIURA-TUMBES,CFP TUMBES,2025,2025-01-15,2025-02-11,INTE,26
+Ejecucion,ZONAL PIURA-TUMBES,CFP TUMBES,2025,2025-02-19,2025-03-18,INTE,27
+Ejecucion,ZONAL PIURA-TUMBES,CFP TUMBES,2025,2025-03-26,2025-04-22,INTE,26
+Ejecucion,ZONAL PIURA-TUMBES,CFP TUMBES,2025,2025-04-30,2025-05-27,INTE,27
+Ejecucion,ZONAL PIURA-TUMBES,CFP TUMBES,2025,2025-06-04,2025-07-01,INTE,26
+Ejecucion,ZONAL PIURA-TUMBES,CFP TUMBES,2025,2025-07-09,2025-08-05,INTE,27
+Ejecucion,ZONAL PIURA-TUMBES,CFP TUMBES,2025,2025-08-13,2025-09-09,INTE,26
+Ejecucion,ZONAL PIURA-TUMBES,CFP TALARA,2025,2025-02-12,2025-03-11,INTE,25
+Ejecucion,ZONAL PIURA-TUMBES,CFP TALARA,2025,2025-03-19,2025-04-15,INTE,26
+Ejecucion,ZONAL PIURA-TUMBES,CFP TALARA,2025,2025-04-23,2025-05-20,INTE,25
+Ejecucion,ZONAL PIURA-TUMBES,CFP TALARA,2025,2025-05-28,2025-06-24,INTE,26
+Ejecucion,ZONAL PIURA-TUMBES,CFP TALARA,2025,2025-07-02,2025-07-29,INTE,25
+Ejecucion,ZONAL PIURA-TUMBES,CFP TALARA,2025,2025-08-06,2025-09-02,INTE,26
+Ejecucion,ZONAL PIURA-TUMBES,UCP PIURA-ZI,2025,2025-08-02,2025-08-29,INTE,0
+Ejecucion,ZONAL PIURA-TUMBES,UCP PIURA-ZI,2025,2025-08-18,2025-09-14,INTE,27
+Ejecucion,ZONAL LA LIBERTAD,UCP TRUJILLO ETI IDIOMAS,2025,2025-08-11,2025-09-05,INTE,30
+Ejecucion,ZONAL LA LIBERTAD,UCP TRUJILLO ETI IDIOMAS,2025,2025-08-09,2025-09-06,INTE,30
+Ejecucion,ZONAL VIRTUAL,CAMPUS VIRTUAL,2025,2025-07-06,2025-08-03,INGL,26
+Ejecucion,ZONAL VIRTUAL,CAMPUS VIRTUAL,2025,2025-08-17,2025-09-21,INGL,27
+Ejecucion,ZONAL VIRTUAL,CAMPUS VIRTUAL,2025,2025-01-26,2025-03-02,INGL,25
+Ejecucion,ZONAL VIRTUAL,CAMPUS VIRTUAL,2025,2025-03-09,2025-04-06,INGL,26
+Ejecucion,ZONAL VIRTUAL,CAMPUS VIRTUAL,2025,2025-04-13,2025-05-11,INGL,25
+Ejecucion,ZONAL VIRTUAL,CAMPUS VIRTUAL,2025,2025-05-18,2025-06-15,INGL,25
+Ejecucion,ZONAL VIRTUAL,CAMPUS VIRTUAL,2025,2025-06-22,2025-07-20,INGL,25
+Ejecucion,ZONAL VIRTUAL,CAMPUS VIRTUAL,2025,2025-07-27,2025-08-24,INGL,27
+Ejecucion,ZONAL VIRTUAL,CAMPUS VIRTUAL,2025,2025-08-31,2025-09-28,INGL,28
+`;
         let fullData = [];
         let monthlyChart, materiaChart;
 
-        async function fetchData() {
+        function loadAndProcessData() {
             try {
-                const response = await fetch(dataUrl);
-                const csvText = await response.text();
-                const rows = csvText.split('\\n').slice(1);
+                const rows = csvData.trim().split(/\r?\n/).slice(1);
                 fullData = rows.map(row => {
                     const columns = row.split(',');
                     return {
-                        estado: columns[0],
-                        zonal: columns[1],
-                        campus: columns[2],
-                        periodo: parseInt(columns[3]),
-                        inicio: columns[4],
-                        fin: columns[5],
-                        materia: columns[6],
-                        participantes: parseInt(columns[7]) || 0
+                        estado: (columns[0] || '').trim(),
+                        zonal: (columns[1] || '').trim(),
+                        campus: (columns[2] || '').trim(),
+                        periodo: parseInt(columns[3], 10),
+                        inicio: (columns[4] || '').trim(),
+                        fin: (columns[5] || '').trim(),
+                        materia: (columns[6] || '').trim(),
+                        participantes: parseInt(columns[7], 10) || 0
                     };
-                }).filter(row => row.zonal && row.periodo);
+                }).filter(row => row.zonal && !isNaN(row.periodo) && row.inicio);
             } catch (error) {
-                console.error("Error al cargar los datos:", error);
+                console.error("Error al procesar los datos:", error);
+                document.querySelector('.container').innerHTML = `<div class="text-center p-8 bg-red-100 text-red-700 rounded-xl"><h3>Error al Procesar los Datos</h3><p>Ocurrió un problema al leer la información interna.</p></div>`;
             }
         }
 
@@ -177,26 +301,26 @@
                 return periodoMatch && zonalMatch && campusMatch;
             });
 
-            // Update KPIs
             const totalParticipantes = filteredData.reduce((sum, item) => sum + item.participantes, 0);
             document.getElementById('total-participantes').textContent = totalParticipantes.toLocaleString('es-ES');
             document.getElementById('total-cursos').textContent = filteredData.length.toLocaleString('es-ES');
 
-            // Update Monthly Chart
             const monthlyData = {};
             const meses = ["Ene", "Feb", "Mar", "Abr", "May", "Jun", "Jul", "Ago", "Sep", "Oct", "Nov", "Dic"];
             meses.forEach(m => monthlyData[m] = 0);
 
             filteredData.forEach(item => {
-                const month = new Date(item.inicio).getMonth();
-                if (!isNaN(month)) {
-                    monthlyData[meses[month]] += item.participantes;
+                const dateParts = item.inicio.split('-');
+                if(dateParts.length === 3) {
+                    const monthIndex = parseInt(dateParts[1], 10) - 1;
+                    if (!isNaN(monthIndex) && monthIndex >= 0 && monthIndex < 12) {
+                        monthlyData[meses[monthIndex]] += item.participantes;
+                    }
                 }
             });
             monthlyChart.data.datasets[0].data = Object.values(monthlyData);
             monthlyChart.update();
 
-            // Update Materia Chart
             const materiaData = filteredData.reduce((acc, item) => {
                 acc[item.materia] = (acc[item.materia] || 0) + item.participantes;
                 return acc;
@@ -226,24 +350,13 @@
                         borderRadius: 5,
                     }]
                 },
-                options: {
-                    responsive: true,
-                    maintainAspectRatio: false,
-                    scales: { y: { beginAtZero: true } },
-                    plugins: { legend: { display: false } }
-                }
+                options: { responsive: true, maintainAspectRatio: false, scales: { y: { beginAtZero: true } }, plugins: { legend: { display: false } } }
             });
 
             const materiaCtx = document.getElementById('materia-chart').getContext('2d');
             materiaChart = new Chart(materiaCtx, {
                 type: 'doughnut',
-                data: {
-                    labels: [],
-                    datasets: [{
-                        data: [],
-                        backgroundColor: ['#0d6efd', '#198754', '#ffc107', '#dc3545', '#6c757d', '#0dcaf0'],
-                    }]
-                },
+                data: { labels: [], datasets: [{ data: [], backgroundColor: ['#0d6efd', '#198754', '#ffc107', '#dc3545', '#6c757d', '#0dcaf0'] }] },
                 options: {
                     responsive: true,
                     maintainAspectRatio: false,
@@ -251,6 +364,7 @@
                         legend: { position: 'bottom' },
                         datalabels: {
                             formatter: (value, ctx) => {
+                                if (value === 0) return '';
                                 const sum = ctx.chart.data.datasets[0].data.reduce((a, b) => a + b, 0);
                                 const percentage = (value / sum * 100).toFixed(1) + '%';
                                 return percentage;
@@ -263,11 +377,13 @@
             });
         }
 
-        document.addEventListener('DOMContentLoaded', async () => {
+        document.addEventListener('DOMContentLoaded', () => {
             setupCharts();
-            await fetchData();
-            populateFilters();
-            updateDashboard();
+            loadAndProcessData(); // Changed from await fetchData()
+            if (fullData.length > 0) {
+                populateFilters();
+                updateDashboard();
+            }
 
             document.getElementById('periodo-filter').addEventListener('click', (e) => {
                 if(e.target.tagName === 'BUTTON') {
