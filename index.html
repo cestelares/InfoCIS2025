@@ -3,7 +3,11 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Centro de Idiomas SENATI</title>
+    <!-- Meta tags para evitar el caché y asegurar que se muestren las actualizaciones -->
+    <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate" />
+    <meta http-equiv="Pragma" content="no-cache" />
+    <meta http-equiv="Expires" content="0" />
+    <title>CENTRO DE IDIOMAS SENATI</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/chartjs-plugin-datalabels@2.0.0"></script>
@@ -95,7 +99,7 @@
         <div class="grid grid-cols-1 lg:grid-cols-5 gap-6">
             <!-- Mapa -->
             <div class="lg:col-span-5 bg-white p-6 rounded-xl shadow-md">
-                <h3 class="text-xl font-semibold mb-4 text-center">Distribución Geográfica de Participantes por Zonal</h3>
+                <h3 class="text-xl font-semibold mb-4 text-center">Distribución Geográfica de Participantes</h3>
                  <div id="map"></div>
             </div>
 
@@ -207,7 +211,7 @@ Ejecucion,ZONAL LAMBAYEQUE,CFP CHICLAYO,2025,2025-05-15,2025-06-04,INGL,20
 Ejecucion,ZONAL LAMBAYEQUE,CFP CHICLAYO,2025,2025-06-09,2025-06-30,INGL,19
 Ejecucion,ZONAL LAMBAYEQUE,CFP CHICLAYO,2025,2025-07-03,2025-07-23,INGL,21
 Ejecucion,ZONAL PIURA-TUMBES,UCP PIURA-ZI,2025,2025-02-05,2025-03-05,INTE,25
-Ejecucion,ZONAL PIURA-TUMBES,UCP SULLANA,2025,2025-03-12,2025-04-09,INTE,25
+Ejecucion,ZONAL PIURA-TUMBES,CFP SULLANA,2025,2025-03-12,2025-04-09,INTE,25
 Ejecucion,ZONAL PIURA-TUMBES,CFP TUMBES,2025,2025-04-23,2025-05-21,INTE,25
 Ejecucion,ZONAL PIURA-TUMBES,CFP TALARA,2025,2025-05-28,2025-06-25,INTE,25
 Ejecucion,ZONAL PIURA-TUMBES,CFP PIURA,2025,2025-07-02,2025-07-30,INTE,25
@@ -240,6 +244,50 @@ Ejecucion,ZONAL VIRTUAL,CAMPUS VIRTUAL,2025,2025-06-22,2025-07-20,INGL,25
             "ZONAL CUSCO-APURIMAC-MADRE DE DIOS": [-13.53194, -71.96746]
         };
 
+        const campusCoordinates = {
+            "CFP CHICLAYO": [-6.77, -79.84],
+            "CFP TRUJILLO": [-8.11, -79.03],
+            "CFP CHIMBOTE": [-9.07, -78.59],
+            "CFP HUARAZ": [-9.53, -77.53],
+            "UCP CHACHAPOYAS": [-6.23, -77.87],
+            "CFP IQUITOS": [-3.75, -73.25],
+            "CFP PUCALLPA": [-8.38, -74.55],
+            "CFP PISCO": [-13.71, -76.20],
+            "CFP AREQUIPA": [-16.40, -71.54],
+            "CFP TACNA": [-18.01, -70.25],
+            "CFP LUIS CACERES GRAZIANI": [-12.04, -77.03],
+            "IND-CENTRO DE IDIOMAS": [-12.06, -77.04],
+            "CFP VILLA EL SALVADOR": [-12.21, -76.94],
+            "CFP CALLAO - VENTANILLA": [-11.91, -77.12],
+            "CFP CAÑETE": [-13.08, -76.38],
+            "UCP MOYOBAMBA-MANT": [-6.03, -76.97],
+            "UCP MOYOBAMBA-TARAPOTO": [-6.48, -76.37],
+            "UCP CHICLAYO CENTRO ETI-IDIOMA": [-6.78, -79.85],
+            "CFP TALARA": [-4.58, -81.27],
+            "CFP SULLANA": [-4.90, -80.68],
+            "CFP PIURA": [-5.19, -80.63],
+            "CFP HUANUCO": [-9.93, -76.24],
+            "CFP CERRO DE PASCO": [-10.68, -76.26],
+            "CFP CHINCHA": [-13.46, -76.13],
+            "CFP ICA": [-14.07, -75.73],
+            "CFP AYACUCHO": [-13.16, -74.22],
+            "CFP CUSCO": [-13.52, -71.98],
+            "CFP ILO": [-17.64, -71.34],
+            "CFP INDEPENDENCIA": [-11.99, -77.06],
+            "UCP JAEN": [-5.70, -78.80],
+            "UCP PIURA-ZI": [-5.20, -80.64],
+            "CFP MOLLENDO": [-17.02, -72.01],
+            "CFP JULIACA": [-15.49, -70.13],
+            "CENTRO DE ESTUDIOS GENERALES": [-12.05, -77.05],
+            "CFP HUANCAVELICA": [-12.78, -74.97],
+            "CFP RIO NEGRO": [-11.16, -75.28],
+            "CFP HUANCAYO": [-12.07, -75.20],
+            "CFP LA OROYA": [-11.52, -75.90],
+            "CFP SAN RAMON": [-11.12, -75.35],
+            "CFP PUNO": [-15.84, -70.02],
+            "UCP TACNA ETI-CIS": [-18.02, -70.26],
+            "UCP TRUJILLO ETI IDIOMAS": [-8.12, -79.04],
+        };
 
         function loadAndProcessData() {
             try {
@@ -275,13 +323,24 @@ Ejecucion,ZONAL VIRTUAL,CAMPUS VIRTUAL,2025,2025-06-22,2025-07-20,INGL,25
                 if (index === 0) button.classList.add('active');
                 periodoContainer.appendChild(button);
             });
-
-            const zonales = ['Todos los Zonales', ...new Set(fullData.map(item => item.zonal))].sort();
+            
+            updateZonalFilter();
+        }
+        
+        function updateZonalFilter() {
+            const activePeriodoBtn = document.querySelector('#periodo-filter button.active');
+            if (!activePeriodoBtn) return;
+            const selectedPeriodo = parseInt(activePeriodoBtn.dataset.periodo);
+            
+            const periodData = fullData.filter(item => item.periodo === selectedPeriodo);
+            const zonales = ['Todos los Zonales', ...new Set(periodData.map(item => item.zonal))].sort();
+            
             const zonalFilter = document.getElementById('zonal-filter');
             zonalFilter.innerHTML = zonales.map(z => `<option value="${z}">${z}</option>`).join('');
             
             updateCampusFilter();
         }
+
 
         function updateCampusFilter() {
             const selectedZonal = document.getElementById('zonal-filter').value;
@@ -290,13 +349,13 @@ Ejecucion,ZONAL VIRTUAL,CAMPUS VIRTUAL,2025,2025-06-22,2025-07-20,INGL,25
             if (!activePeriodoBtn) return;
             const selectedPeriodo = parseInt(activePeriodoBtn.dataset.periodo);
             
-            let campusOptions;
-            if (selectedZonal === 'Todos los Zonales') {
-                campusOptions = ['Todos los Campus', ...new Set(fullData.filter(item => item.periodo === selectedPeriodo).map(item => item.campus))].sort();
-            } else {
-                campusOptions = ['Todos los Campus', ...new Set(fullData.filter(item => item.zonal === selectedZonal && item.periodo === selectedPeriodo).map(item => item.campus))].sort();
+            let dataForCampusFilter = fullData.filter(item => item.periodo === selectedPeriodo);
+            
+            if (selectedZonal !== 'Todos los Zonales') {
+                dataForCampusFilter = dataForCampusFilter.filter(item => item.zonal === selectedZonal);
             }
             
+            const campusOptions = ['Todos los Campus', ...new Set(dataForCampusFilter.map(item => item.campus))].sort();
             campusFilter.innerHTML = campusOptions.map(c => `<option value="${c}">${c}</option>`).join('');
         }
 
@@ -344,25 +403,38 @@ Ejecucion,ZONAL VIRTUAL,CAMPUS VIRTUAL,2025,2025-06-22,2025-07-20,INGL,25
             materiaChart.data.datasets[0].data = sortedMateria.map(item => item[1]);
             materiaChart.update();
             
-            updateMap(filteredData);
+            updateMap(filteredData, selectedCampus);
         }
         
-        function updateMap(data) {
+        function updateMap(data, selectedCampus) {
             markersLayer.clearLayers();
-            const zonalParticipants = data.reduce((acc, item) => {
-                if(item.zonal !== 'ZONAL VIRTUAL') {
-                    acc[item.zonal] = (acc[item.zonal] || 0) + item.participantes;
-                }
-                return acc;
-            }, {});
             
-            for(const zonal in zonalParticipants) {
-                if(zonalCoordinates[zonal] && zonalParticipants[zonal] > 0) {
-                    const marker = L.marker(zonalCoordinates[zonal]).addTo(markersLayer);
-                    marker.bindPopup(`<b>${zonal}</b><br>${zonalParticipants[zonal].toLocaleString('es-ES')} participantes`);
+            if (selectedCampus !== 'Todos los Campus' && campusCoordinates[selectedCampus]) {
+                const coords = campusCoordinates[selectedCampus];
+                map.setView(coords, 13);
+                const campusData = data.filter(d => d.campus === selectedCampus);
+                const totalParticipantes = campusData.reduce((sum, item) => sum + item.participantes, 0);
+
+                const marker = L.marker(coords).addTo(markersLayer);
+                marker.bindPopup(`<b>${selectedCampus}</b><br>${totalParticipantes.toLocaleString('es-ES')} participantes`).openPopup();
+            } else {
+                map.setView([-9.19, -75.015], 6); // Vista general de Peru
+                const zonalParticipants = data.reduce((acc, item) => {
+                    if(item.zonal !== 'ZONAL VIRTUAL') {
+                        acc[item.zonal] = (acc[item.zonal] || 0) + item.participantes;
+                    }
+                    return acc;
+                }, {});
+                
+                for(const zonal in zonalParticipants) {
+                    if(zonalCoordinates[zonal] && zonalParticipants[zonal] > 0) {
+                        const marker = L.marker(zonalCoordinates[zonal]).addTo(markersLayer);
+                        marker.bindPopup(`<b>${zonal}</b><br>${zonalParticipants[zonal].toLocaleString('es-ES')} participantes`);
+                    }
                 }
             }
         }
+
 
         function setupCharts() {
             Chart.register(ChartDataLabels);
@@ -430,7 +502,7 @@ Ejecucion,ZONAL VIRTUAL,CAMPUS VIRTUAL,2025,2025-06-22,2025-07-20,INGL,25
                 if(e.target.tagName === 'BUTTON') {
                     document.querySelectorAll('#periodo-filter button').forEach(btn => btn.classList.remove('active'));
                     e.target.classList.add('active');
-                    updateCampusFilter(); // Actualizar campus al cambiar periodo
+                    updateZonalFilter();
                     updateDashboard();
                 }
             });
