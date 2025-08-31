@@ -1,0 +1,226 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Infografía de Clientes</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
+    <style>
+        body {
+            font-family: 'Inter', sans-serif;
+        }
+        .chart-container {
+            position: relative;
+            margin: auto;
+            height: 40vh;
+            width: 100%;
+            max-width: 600px;
+            max-height: 400px;
+        }
+        @media (min-width: 768px) {
+            .chart-container {
+                height: 350px;
+            }
+        }
+    </style>
+</head>
+<body class="bg-slate-100 text-slate-800">
+    <!-- Palette: Energetic & Playful (#003f5c, #58508d, #bc5090, #ff6361, #ffa600) -->
+    <!-- Narrative Plan: Intro -> Country Distribution -> City Breakdown -> Continental Comparison -> Data Table -> Conclusion -->
+    <!-- Visualization Plan: -->
+    <!-- Total Customers -> Inform -> Big Number -> HTML/Tailwind (No SVG) -->
+    <!-- Customers by Country -> Compare -> Horizontal Bar Chart -> Chart.js/Canvas (No SVG) -->
+    <!-- Customers by City -> Compare -> Vertical Bar Chart -> Chart.js/Canvas (No SVG) -->
+    <!-- Continental Breakdown -> Compare Composition -> Donut Chart -> Chart.js/Canvas (No SVG) -->
+    <!-- Raw Data -> Organize -> Table -> HTML/Tailwind (No SVG) -->
+    <!-- Confirmation: Neither Mermaid JS nor SVG were used in this output. -->
+
+    <div class="container mx-auto p-4 md:p-8 max-w-7xl">
+
+        <header class="text-center mb-12">
+            <h1 class="text-4xl md:text-5xl font-bold mb-2" style="color: #003f5c;">Análisis Visual de la Base de Clientes</h1>
+            <p class="text-lg text-slate-600">Una mirada profunda a los datos de la tabla `[dbo].[Cliente]`.</p>
+        </header>
+
+        <section class="text-center bg-white rounded-2xl shadow-lg p-8 mb-12">
+             <h2 class="text-2xl font-semibold mb-2" style="color: #58508d;">Total de Clientes Registrados</h2>
+             <p class="text-7xl font-bold" style="color: #ff6361;">17</p>
+             <p class="text-slate-500 mt-2">Este es el número total de clientes en nuestro conjunto de datos actual, formando la base para nuestro análisis geográfico.</p>
+        </section>
+
+        <div class="grid grid-cols-1 lg:grid-cols-2 gap-8">
+
+            <div class="bg-white rounded-2xl shadow-lg p-6 flex flex-col items-center">
+                <h2 class="text-2xl font-semibold text-center mb-4" style="color: #003f5c;">Distribución de Clientes por País</h2>
+                <p class="text-center text-slate-500 mb-4 px-4">Esta gráfica muestra la cantidad de clientes en cada país. Brasil y Francia destacan como los países con mayor presencia, indicando mercados clave.</p>
+                <div class="chart-container">
+                    <canvas id="countryChart"></canvas>
+                </div>
+            </div>
+
+            <div class="bg-white rounded-2xl shadow-lg p-6 flex flex-col items-center">
+                <h2 class="text-2xl font-semibold text-center mb-4" style="color: #003f5c;">Desglose por Continente</h2>
+                <p class="text-center text-slate-500 mb-4 px-4">Aquí vemos la proporción de clientes por continente. Europa representa la mayor parte de nuestra base de clientes, seguida de cerca por América del Sur.</p>
+                <div class="chart-container h-[30vh] md:h-auto">
+                    <canvas id="continentChart"></canvas>
+                </div>
+            </div>
+
+            <div class="lg:col-span-2 bg-white rounded-2xl shadow-lg p-6 flex flex-col items-center">
+                <h2 class="text-2xl font-semibold text-center mb-4" style="color: #003f5c;">Distribución de Clientes por Ciudad</h2>
+                 <p class="text-center text-slate-500 mb-4 px-4">A un nivel más granular, este gráfico muestra la distribución por ciudad. La mayoría de las ciudades tienen un solo cliente, con la excepción de Ciudad de México y São Paulo.</p>
+                <div class="chart-container w-full max-w-4xl">
+                    <canvas id="cityChart"></canvas>
+                </div>
+            </div>
+
+            <div class="lg:col-span-2 bg-white rounded-2xl shadow-lg p-6">
+                <h2 class="text-2xl font-semibold text-center mb-4" style="color: #003f5c;">Tabla Completa de Clientes</h2>
+                 <p class="text-center text-slate-500 mb-6 px-4">Para una referencia detallada, la siguiente tabla contiene la información completa de cada uno de los 17 clientes analizados.</p>
+                <div class="overflow-x-auto">
+                    <table class="min-w-full divide-y divide-slate-200">
+                        <thead class="bg-slate-50">
+                            <tr>
+                                <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-slate-500 uppercase tracking-wider">ID</th>
+                                <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-slate-500 uppercase tracking-wider">Nombre</th>
+                                <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-slate-500 uppercase tracking-wider">Ciudad</th>
+                                <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-slate-500 uppercase tracking-wider">País</th>
+                            </tr>
+                        </thead>
+                        <tbody id="customerTableBody" class="bg-white divide-y divide-slate-200">
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+
+        <footer class="text-center mt-12 py-6 border-t border-slate-200">
+            <p class="text-slate-500">Infografía generada automáticamente a partir de datos de SQL.</p>
+        </footer>
+    </div>
+
+    <script>
+        const customerData = [
+            { id: 1, nombre: 'Alejandra Camino', ciudad: 'Madrid', pais: 'Spain' },
+            { id: 2, nombre: 'Alexander Feuer', ciudad: 'Leipzig', pais: 'Germany' },
+            { id: 3, nombre: 'Ana Trujillo', ciudad: 'México D.F.', pais: 'Mexico' },
+            { id: 4, nombre: 'Anabela Domingues', ciudad: 'Sao Paulo', pais: 'Brazil' },
+            { id: 5, nombre: 'André Fonseca', ciudad: 'Campinas', pais: 'Brazil' },
+            { id: 6, nombre: 'Ann Devon', ciudad: 'London', pais: 'UK' },
+            { id: 7, nombre: 'Annette Roulet', ciudad: 'Toulouse', pais: 'France' },
+            { id: 8, nombre: 'Antonio Moreno', ciudad: 'México D.F.', pais: 'Mexico' },
+            { id: 9, nombre: 'Aria Cruz', ciudad: 'Sao Paulo', pais: 'Brazil' },
+            { id: 10, nombre: 'Art Braunschweiger', ciudad: 'Lander', pais: 'USA' },
+            { id: 11, nombre: 'Bernardo Batista', ciudad: 'Rio de Janeiro', pais: 'Brazil' },
+            { id: 12, nombre: 'Carine Schmitt', ciudad: 'Nantes', pais: 'France' },
+            { id: 13, nombre: 'Carlos González', ciudad: 'Barquisimeto', pais: 'Venezuela' },
+            { id: 14, nombre: 'Carlos Hernández', ciudad: 'San Cristóbal', pais: 'Venezuela' },
+            { id: 15, nombre: 'Catherine Dewey', ciudad: 'Bruxelles', pais: 'Belgium' },
+            { id: 16, nombre: 'Christina Berglund', ciudad: 'Luleå', pais: 'Sweden' },
+            { id: 17, nombre: 'Daniel Tonini', ciudad: 'Versailles', pais: 'France' },
+        ];
+
+        const palette = ['#003f5c', '#58508d', '#bc5090', '#ff6361', '#ffa600', '#2a6fdb', '#727272'];
+
+        function processData(data, key) {
+            const counts = data.reduce((acc, item) => {
+                acc[item[key]] = (acc[item[key]] || 0) + 1;
+                return acc;
+            }, {});
+            const sorted = Object.entries(counts).sort((a, b) => b[1] - a[1]);
+            return {
+                labels: sorted.map(item => item[0]),
+                data: sorted.map(item => item[1]),
+            };
+        }
+        
+        const tooltipTitleCallback = (tooltipItems) => {
+            const item = tooltipItems[0];
+            let label = item.chart.data.labels[item.dataIndex];
+            if (Array.isArray(label)) {
+              return label.join(' ');
+            }
+            return label;
+        };
+
+        const commonChartOptions = {
+            responsive: true,
+            maintainAspectRatio: false,
+            plugins: {
+                legend: {
+                    position: 'top',
+                },
+                tooltip: {
+                    callbacks: {
+                        title: tooltipTitleCallback
+                    }
+                }
+            }
+        };
+
+        const countryData = processData(customerData, 'pais');
+        new Chart(document.getElementById('countryChart'), {
+            type: 'bar',
+            data: {
+                labels: countryData.labels,
+                datasets: [{
+                    label: 'Número de Clientes',
+                    data: countryData.data,
+                    backgroundColor: palette,
+                    borderColor: palette.map(c => c + 'B3'),
+                    borderWidth: 1
+                }]
+            },
+            options: { ...commonChartOptions, indexAxis: 'y', plugins: { legend: { display: false }, tooltip: { callbacks: { title: tooltipTitleCallback } } } }
+        });
+
+        const cityData = processData(customerData, 'ciudad');
+        new Chart(document.getElementById('cityChart'), {
+            type: 'bar',
+            data: {
+                labels: cityData.labels,
+                datasets: [{
+                    label: 'Número de Clientes',
+                    data: cityData.data,
+                    backgroundColor: palette,
+                    borderColor: palette.map(c => c + 'B3'),
+                    borderWidth: 1
+                }]
+            },
+            options: { ...commonChartOptions, plugins: { legend: { display: false }, tooltip: { callbacks: { title: tooltipTitleCallback } } } }
+        });
+
+        const continentMap = { 'Brazil': 'South America', 'Venezuela': 'South America', 'Spain': 'Europe', 'Germany': 'Europe', 'UK': 'Europe', 'France': 'Europe', 'Belgium': 'Europe', 'Sweden': 'Europe', 'Mexico': 'North America', 'USA': 'North America' };
+        const customerDataWithContinent = customerData.map(c => ({...c, continent: continentMap[c.pais] }));
+        const continentData = processData(customerDataWithContinent, 'continent');
+        new Chart(document.getElementById('continentChart'), {
+            type: 'doughnut',
+            data: {
+                labels: continentData.labels,
+                datasets: [{
+                    label: 'Clientes por Continente',
+                    data: continentData.data,
+                    backgroundColor: ['#58508d', '#ff6361', '#ffa600'],
+                    hoverOffset: 4
+                }]
+            },
+            options: commonChartOptions
+        });
+
+        const tableBody = document.getElementById('customerTableBody');
+        customerData.forEach(customer => {
+            const row = `<tr>
+                <td class="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900">${customer.id}</td>
+                <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">${customer.nombre}</td>
+                <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">${customer.ciudad}</td>
+                <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">${customer.pais}</td>
+            </tr>`;
+            tableBody.innerHTML += row;
+        });
+    </script>
+</body>
+</html>
