@@ -7,7 +7,7 @@
     <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate" />
     <meta http-equiv="Pragma" content="no-cache" />
     <meta http-equiv="Expires" content="0" />
-    <title>CENTRO DE IDIOMAS SENATI</title>
+    <title>Indicadores CIS</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/chartjs-plugin-datalabels@2.0.0"></script>
@@ -32,13 +32,20 @@
             transform: translateY(-5px);
             box-shadow: 0 10px 15px -3px rgb(0 0 0 / 0.1), 0 4px 6px -2px rgb(0 0 0 / 0.1);
         }
-        select, .filter-btn-group button {
-            transition: all 0.2s ease-in-out;
+        .tab-button {
+            transition: all 0.3s ease;
+            padding: 0.75rem 1.5rem;
+            border-radius: 0.5rem;
+            font-weight: 600;
         }
-        .filter-btn-group button.active {
+        .tab-button.active {
             background-color: #0d6efd;
             color: white;
-            font-weight: 600;
+            box-shadow: 0 4px 14px 0 rgba(13, 110, 253, 0.39);
+        }
+        .tab-button:not(.active) {
+            background-color: #e9ecef;
+            color: #495057;
         }
         .chart-container {
             position: relative;
@@ -56,70 +63,104 @@
 <body class="text-gray-800">
     <div class="container mx-auto p-4 md:p-6">
 
-        <header class="text-left mb-6">
-            <h1 class="text-3xl md:text-4xl font-bold text-gray-900">Centro de IDIOMAS SENATI</h1>
-            <p class="text-lg text-gray-500">Análisis interactivo de participantes y cursos.</p>
+        <header class="text-center mb-6">
+            <h1 class="text-3xl md:text-4xl font-bold text-gray-900">Idiomas SENATI</h1>
         </header>
 
-        <!-- Filtros -->
-        <div class="grid grid-cols-1 md:grid-cols-3 gap-4 mb-6 p-4 bg-white rounded-xl shadow-md">
-            <div>
-                <label for="periodo" class="block text-sm font-medium text-gray-700 mb-1">Periodo</label>
-                <div id="periodo-filter" class="filter-btn-group flex rounded-md shadow-sm">
-                    <!-- Botones de periodo se generarán aquí -->
+        <!-- Navegación de Pestañas -->
+        <nav class="flex justify-center mb-8">
+            <div class="flex space-x-4 p-2 bg-white rounded-xl shadow-sm">
+                <button id="btn-cis" class="tab-button active">CIS</button>
+                <button id="btn-englishscore" class="tab-button">EnglishScore</button>
+            </div>
+        </nav>
+
+        <main id="main-content">
+            <!-- Contenido del Dashboard CIS -->
+            <div id="cis-content">
+                <p class="text-lg text-gray-500 text-center mb-6">Análisis interactivo de participantes y cursos.</p>
+                <!-- Filtros -->
+                <div class="grid grid-cols-1 md:grid-cols-3 gap-4 mb-6 p-4 bg-white rounded-xl shadow-md">
+                    <div>
+                        <label for="periodo" class="block text-sm font-medium text-gray-700 mb-1">Periodo</label>
+                        <div id="periodo-filter" class="flex rounded-md shadow-sm">
+                            <!-- Botones de periodo se generarán aquí -->
+                        </div>
+                    </div>
+                    <div>
+                        <label for="zonal" class="block text-sm font-medium text-gray-700 mb-1">Zonal</label>
+                        <select id="zonal-filter" class="w-full p-2 border border-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500"></select>
+                    </div>
+                    <div>
+                        <label for="campus" class="block text-sm font-medium text-gray-700 mb-1">Campus</label>
+                        <select id="campus-filter" class="w-full p-2 border border-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500"></select>
+                    </div>
+                </div>
+
+                <!-- KPIs -->
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mb-6">
+                    <div class="kpi-card">
+                        <h3 class="text-gray-500 font-semibold">Total Participantes</h3>
+                        <p id="total-participantes" class="text-5xl font-bold text-blue-600">0</p>
+                    </div>
+                    <div class="kpi-card">
+                        <h3 class="text-gray-500 font-semibold">Total Cursos</h3>
+                        <p id="total-cursos" class="text-5xl font-bold text-teal-600">0</p>
+                    </div>
+                </div>
+
+                <!-- Gráficos y Mapa -->
+                <div class="grid grid-cols-1 lg:grid-cols-5 gap-6">
+                    <div class="lg:col-span-5 bg-white p-6 rounded-xl shadow-md">
+                        <h3 class="text-xl font-semibold mb-4 text-center">Distribución Geográfica de Participantes</h3>
+                        <div id="map"></div>
+                    </div>
+                    <div class="lg:col-span-3 bg-white p-6 rounded-xl shadow-md">
+                        <h3 class="text-xl font-semibold mb-4 text-center">Participantes por Mes de Inicio</h3>
+                        <div class="chart-container"><canvas id="monthly-chart"></canvas></div>
+                    </div>
+                    <div class="lg:col-span-2 bg-white p-6 rounded-xl shadow-md">
+                        <h3 class="text-xl font-semibold mb-4 text-center">Distribución por Materia</h3>
+                        <div class="chart-container"><canvas id="materia-chart"></canvas></div>
+                    </div>
                 </div>
             </div>
-            <div>
-                <label for="zonal" class="block text-sm font-medium text-gray-700 mb-1">Zonal</label>
-                <select id="zonal-filter" class="w-full p-2 border border-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500">
-                    <!-- Opciones de zonal se generarán aquí -->
-                </select>
-            </div>
-            <div>
-                <label for="campus" class="block text-sm font-medium text-gray-700 mb-1">Campus</label>
-                <select id="campus-filter" class="w-full p-2 border border-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500">
-                    <!-- Opciones de campus se generarán aquí -->
-                </select>
-            </div>
-        </div>
 
-        <!-- KPIs -->
-        <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mb-6">
-            <div class="kpi-card">
-                <h3 class="text-gray-500 font-semibold">Total Participantes</h3>
-                <p id="total-participantes" class="text-5xl font-bold text-blue-600">0</p>
-            </div>
-            <div class="kpi-card">
-                <h3 class="text-gray-500 font-semibold">Total Cursos</h3>
-                <p id="total-cursos" class="text-5xl font-bold text-teal-600">0</p>
-            </div>
-        </div>
+            <!-- Contenido de EnglishScore -->
+            <div id="englishscore-content" class="hidden">
+                 <div class="bg-white rounded-2xl shadow-lg p-8 max-w-3xl mx-auto">
+                    <h2 class="text-3xl font-bold text-center mb-6" style="color: #003f5c;">Fechas de Examen EnglishScore</h2>
+                    <p class="text-center text-slate-600 mb-8">A continuación podrá verificar las fechas programadas para los próximos exámenes:</p>
+                    
+                    <ul class="space-y-4 text-lg text-slate-700 mb-8">
+                        <li class="flex items-center p-4 bg-slate-50 rounded-lg">
+                            <span class="font-bold w-32">Septiembre:</span>
+                            <span>01/09 al 07/09 del 2025</span>
+                        </li>
+                        <li class="flex items-center p-4 bg-slate-50 rounded-lg">
+                            <span class="font-bold w-32">Octubre:</span>
+                            <span>06/10 al 12/10 del 2025</span>
+                        </li>
+                        <li class="flex items-center p-4 bg-slate-50 rounded-lg">
+                            <span class="font-bold w-32">Noviembre:</span>
+                            <span>03/11 al 09/11 del 2025</span>
+                        </li>
+                        <li class="flex items-center p-4 bg-slate-50 rounded-lg">
+                            <span class="font-bold w-32">Diciembre:</span>
+                            <span>01/12 al 07/12 del 2025</span>
+                        </li>
+                    </ul>
 
-        <!-- Gráficos y Mapa -->
-        <div class="grid grid-cols-1 lg:grid-cols-5 gap-6">
-            <!-- Mapa -->
-            <div class="lg:col-span-5 bg-white p-6 rounded-xl shadow-md">
-                <h3 class="text-xl font-semibold mb-4 text-center">Distribución Geográfica de Participantes</h3>
-                 <div id="map"></div>
-            </div>
-
-            <div class="lg:col-span-3 bg-white p-6 rounded-xl shadow-md">
-                <h3 class="text-xl font-semibold mb-4 text-center">Participantes por Mes de Inicio</h3>
-                <div class="chart-container">
-                    <canvas id="monthly-chart"></canvas>
+                    <div class="text-center">
+                        <a href="https://form.jotform.com/IDIOMAS_SENATI/ACREDITACION-ENGLISHSCORE" target="_blank" rel="noopener noreferrer" class="inline-block bg-blue-600 text-white font-bold py-3 px-8 rounded-lg text-lg hover:bg-blue-700 transition-colors">
+                            Formulario de registro - EnglishScore
+                        </a>
+                    </div>
                 </div>
             </div>
-            <div class="lg:col-span-2 bg-white p-6 rounded-xl shadow-md">
-                <h3 class="text-xl font-semibold mb-4 text-center">Distribución por Materia</h3>
-                <div class="chart-container">
-                    <canvas id="materia-chart"></canvas>
-                </div>
-            </div>
-        </div>
-
+        </main>
     </div>
     
-    <!-- Leaflet JS for Map -->
     <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js" integrity="sha256-20nQCchB9co0qIjJZRGuk2/Z9VM+kNiyxNV1lvTlZBo=" crossorigin=""></script>
 
     <script>
@@ -490,6 +531,11 @@ Ejecucion,ZONAL VIRTUAL,CAMPUS VIRTUAL,2025,2025-06-22,2025-07-20,INGL,25
         }
 
         document.addEventListener('DOMContentLoaded', () => {
+            const btnCis = document.getElementById('btn-cis');
+            const btnEnglishScore = document.getElementById('btn-englishscore');
+            const cisContent = document.getElementById('cis-content');
+            const englishScoreContent = document.getElementById('englishscore-content');
+
             setupCharts();
             setupMap();
             loadAndProcessData();
@@ -497,6 +543,23 @@ Ejecucion,ZONAL VIRTUAL,CAMPUS VIRTUAL,2025,2025-06-22,2025-07-20,INGL,25
                 populateFilters();
                 updateDashboard();
             }
+
+            btnCis.addEventListener('click', () => {
+                btnCis.classList.add('active');
+                btnEnglishScore.classList.remove('active');
+                cisContent.classList.remove('hidden');
+                englishScoreContent.classList.add('hidden');
+                // Re-validate map size after it becomes visible
+                setTimeout(() => map.invalidateSize(), 10);
+            });
+
+            btnEnglishScore.addEventListener('click', () => {
+                btnEnglishScore.classList.add('active');
+                btnCis.classList.remove('active');
+                englishScoreContent.classList.remove('hidden');
+                cisContent.classList.add('hidden');
+            });
+
 
             document.getElementById('periodo-filter').addEventListener('click', (e) => {
                 if(e.target.tagName === 'BUTTON') {
@@ -515,3 +578,4 @@ Ejecucion,ZONAL VIRTUAL,CAMPUS VIRTUAL,2025,2025-06-22,2025-07-20,INGL,25
     </script>
 </body>
 </html>
+
