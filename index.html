@@ -3,238 +3,286 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Infografía Interactiva de Clientes</title>
+    <title>Dashboard de Indicadores CIS</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chartjs-plugin-datalabels@2.0.0"></script>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
     <style>
         body {
             font-family: 'Inter', sans-serif;
+            background-color: #f0f2f5;
+        }
+        .kpi-card {
+            background-color: white;
+            border-radius: 1rem;
+            box-shadow: 0 4px 6px -1px rgb(0 0 0 / 0.1), 0 2px 4px -2px rgb(0 0 0 / 0.1);
+            padding: 1.5rem;
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+        }
+        .kpi-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 15px -3px rgb(0 0 0 / 0.1), 0 4px 6px -2px rgb(0 0 0 / 0.1);
+        }
+        select, .filter-btn-group button {
+            transition: all 0.2s ease-in-out;
+        }
+        .filter-btn-group button.active {
+            background-color: #0d6efd;
+            color: white;
+            font-weight: 600;
         }
         .chart-container {
             position: relative;
-            margin: auto;
-            height: 40vh;
             width: 100%;
-            max-width: 600px;
-            max-height: 400px;
-        }
-        @media (min-width: 768px) {
-            .chart-container {
-                height: 350px;
-            }
-        }
-        .filter-btn {
-            transition: all 0.3s ease;
-        }
-        .filter-btn.active {
-            background-color: #003f5c !important;
-            color: white !important;
-            box-shadow: 0 4px 14px 0 rgba(0, 63, 92, 0.39);
+            height: 350px;
         }
     </style>
 </head>
-<body class="bg-slate-100 text-slate-800">
-    <!-- Palette: Energetic & Playful (#003f5c, #58508d, #bc5090, #ff6361, #ffa600) -->
-    <!-- Narrative Plan: Intro -> Filters -> Country Distribution -> City Breakdown -> Continental Comparison -> Data Table -> Conclusion -->
-    <!-- Visualization Plan: Interactive filtering added. -->
-    <!-- Confirmation: Neither Mermaid JS nor SVG were used in this output. -->
+<body class="text-gray-800">
+    <div class="container mx-auto p-4 md:p-6">
 
-    <div class="container mx-auto p-4 md:p-8 max-w-7xl">
-
-        <header class="text-center mb-8">
-            <h1 class="text-4xl md:text-5xl font-bold mb-2" style="color: #003f5c;">Análisis Visual de la Base de Clientes</h1>
-            <p class="text-lg text-slate-600">Una mirada profunda a los datos de la tabla `[dbo].[Cliente]`.</p>
+        <header class="text-left mb-6">
+            <h1 class="text-3xl md:text-4xl font-bold text-gray-900">Dashboard de Indicadores CIS</h1>
+            <p class="text-lg text-gray-500">Análisis interactivo de participantes y cursos.</p>
         </header>
 
-        <!-- Botones de Filtro -->
-        <div id="filter-controls" class="flex justify-center items-center gap-2 md:gap-4 mb-10 p-4 bg-white rounded-2xl shadow-md">
-            <button data-filter="all" class="filter-btn active text-sm md:text-base font-semibold py-2 px-4 rounded-full bg-slate-200 text-slate-700">Mostrar Todo</button>
-            <button data-filter="dual" class="filter-btn text-sm md:text-base font-semibold py-2 px-4 rounded-full bg-slate-200 text-slate-700">Programa Dual</button>
-            <button data-filter="zonal" class="filter-btn text-sm md:text-base font-semibold py-2 px-4 rounded-full bg-slate-200 text-slate-700">Distribución por Zonales</button>
+        <!-- Filtros -->
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-4 mb-6 p-4 bg-white rounded-xl shadow-md">
+            <div>
+                <label for="periodo" class="block text-sm font-medium text-gray-700 mb-1">Periodo</label>
+                <div id="periodo-filter" class="filter-btn-group flex rounded-md shadow-sm">
+                    <!-- Botones de periodo se generarán aquí -->
+                </div>
+            </div>
+            <div>
+                <label for="zonal" class="block text-sm font-medium text-gray-700 mb-1">Zonal</label>
+                <select id="zonal-filter" class="w-full p-2 border border-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500">
+                    <!-- Opciones de zonal se generarán aquí -->
+                </select>
+            </div>
+            <div>
+                <label for="campus" class="block text-sm font-medium text-gray-700 mb-1">Campus</label>
+                <select id="campus-filter" class="w-full p-2 border border-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500">
+                    <!-- Opciones de campus se generarán aquí -->
+                </select>
+            </div>
         </div>
 
+        <!-- KPIs -->
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mb-6">
+            <div class="kpi-card">
+                <h3 class="text-gray-500 font-semibold">Total Participantes</h3>
+                <p id="total-participantes" class="text-5xl font-bold text-blue-600">0</p>
+            </div>
+            <div class="kpi-card">
+                <h3 class="text-gray-500 font-semibold">Total Cursos</h3>
+                <p id="total-cursos" class="text-5xl font-bold text-teal-600">0</p>
+            </div>
+        </div>
 
-        <section class="text-center bg-white rounded-2xl shadow-lg p-8 mb-12">
-             <h2 class="text-2xl font-semibold mb-2" style="color: #58508d;">Total de Clientes Registrados</h2>
-             <p id="total-clients" class="text-7xl font-bold" style="color: #ff6361;"></p>
-             <p class="text-slate-500 mt-2">Este es el número total de clientes en el conjunto de datos actual, formando la base para nuestro análisis geográfico.</p>
-        </section>
-
-        <div class="grid grid-cols-1 lg:grid-cols-2 gap-8">
-            <div class="bg-white rounded-2xl shadow-lg p-6 flex flex-col items-center">
-                <h2 class="text-2xl font-semibold text-center mb-4" style="color: #003f5c;">Distribución de Clientes por País</h2>
+        <!-- Gráficos -->
+        <div class="grid grid-cols-1 lg:grid-cols-5 gap-6">
+            <div class="lg:col-span-3 bg-white p-6 rounded-xl shadow-md">
+                <h3 class="text-xl font-semibold mb-4 text-center">Participantes por Mes de Inicio</h3>
                 <div class="chart-container">
-                    <canvas id="countryChart"></canvas>
+                    <canvas id="monthly-chart"></canvas>
                 </div>
             </div>
-            <div class="bg-white rounded-2xl shadow-lg p-6 flex flex-col items-center">
-                <h2 class="text-2xl font-semibold text-center mb-4" style="color: #003f5c;">Desglose por Continente</h2>
-                <div class="chart-container h-[30vh] md:h-auto">
-                    <canvas id="continentChart"></canvas>
-                </div>
-            </div>
-            <div class="lg:col-span-2 bg-white rounded-2xl shadow-lg p-6 flex flex-col items-center">
-                <h2 class="text-2xl font-semibold text-center mb-4" style="color: #003f5c;">Distribución de Clientes por Ciudad</h2>
-                <div class="chart-container w-full max-w-4xl">
-                    <canvas id="cityChart"></canvas>
-                </div>
-            </div>
-            <div class="lg:col-span-2 bg-white rounded-2xl shadow-lg p-6">
-                <h2 class="text-2xl font-semibold text-center mb-4" style="color: #003f5c;">Tabla Completa de Clientes</h2>
-                <div class="overflow-x-auto">
-                    <table class="min-w-full divide-y divide-slate-200">
-                        <thead class="bg-slate-50">
-                            <tr>
-                                <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-slate-500 uppercase tracking-wider">ID</th>
-                                <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-slate-500 uppercase tracking-wider">Nombre</th>
-                                <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-slate-500 uppercase tracking-wider">Ciudad</th>
-                                <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-slate-500 uppercase tracking-wider">País</th>
-                                <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-slate-500 uppercase tracking-wider">Programa</th>
-                            </tr>
-                        </thead>
-                        <tbody id="customerTableBody" class="bg-white divide-y divide-slate-200">
-                        </tbody>
-                    </table>
+            <div class="lg:col-span-2 bg-white p-6 rounded-xl shadow-md">
+                <h3 class="text-xl font-semibold mb-4 text-center">Distribución por Materia</h3>
+                <div class="chart-container">
+                    <canvas id="materia-chart"></canvas>
                 </div>
             </div>
         </div>
 
-        <footer class="text-center mt-12 py-6 border-t border-slate-200">
-            <p class="text-slate-500">Infografía generada automáticamente a partir de datos de SQL.</p>
-        </footer>
     </div>
 
     <script>
-        const allCustomerData = [
-            { id: 1, nombre: 'Alejandra Camino', ciudad: 'Madrid', pais: 'Spain', programa: 'dual' },
-            { id: 2, nombre: 'Alexander Feuer', ciudad: 'Leipzig', pais: 'Germany', programa: 'dual' },
-            { id: 3, nombre: 'Ana Trujillo', ciudad: 'México D.F.', pais: 'Mexico', programa: 'dual' },
-            { id: 4, nombre: 'Anabela Domingues', ciudad: 'Sao Paulo', pais: 'Brazil', programa: 'dual' },
-            { id: 5, nombre: 'André Fonseca', ciudad: 'Campinas', pais: 'Brazil', programa: 'dual' },
-            { id: 6, nombre: 'Ann Devon', ciudad: 'London', pais: 'UK', programa: 'dual' },
-            { id: 7, nombre: 'Annette Roulet', ciudad: 'Toulouse', pais: 'France', programa: 'dual' },
-            { id: 8, nombre: 'Antonio Moreno', ciudad: 'México D.F.', pais: 'Mexico', programa: 'dual' },
-            { id: 9, nombre: 'Aria Cruz', ciudad: 'Sao Paulo', pais: 'Brazil', programa: 'zonal' },
-            { id: 10, nombre: 'Art Braunschweiger', ciudad: 'Lander', pais: 'USA', programa: 'zonal' },
-            { id: 11, nombre: 'Bernardo Batista', ciudad: 'Rio de Janeiro', pais: 'Brazil', programa: 'zonal' },
-            { id: 12, nombre: 'Carine Schmitt', ciudad: 'Nantes', pais: 'France', programa: 'zonal' },
-            { id: 13, nombre: 'Carlos González', ciudad: 'Barquisimeto', pais: 'Venezuela', programa: 'zonal' },
-            { id: 14, nombre: 'Carlos Hernández', ciudad: 'San Cristóbal', pais: 'Venezuela', programa: 'zonal' },
-            { id: 15, nombre: 'Catherine Dewey', ciudad: 'Bruxelles', pais: 'Belgium', programa: 'zonal' },
-            { id: 16, nombre: 'Christina Berglund', ciudad: 'Luleå', pais: 'Sweden', programa: 'zonal' },
-            { id: 17, nombre: 'Daniel Tonini', ciudad: 'Versailles', pais: 'France', programa: 'zonal' },
-        ];
+        const dataUrl = 'https://docs.google.com/spreadsheets/d/e/2PACX-1vQ5a-m_g-1JtZ_3Qj-9H5k_gL/pub?gid=0&single=true&output=csv';
+        let fullData = [];
+        let monthlyChart, materiaChart;
 
-        const palette = ['#003f5c', '#58508d', '#bc5090', '#ff6361', '#ffa600', '#2a6fdb', '#727272'];
-        let countryChart, cityChart, continentChart;
+        async function fetchData() {
+            try {
+                const response = await fetch(dataUrl);
+                const csvText = await response.text();
+                const rows = csvText.split('\\n').slice(1);
+                fullData = rows.map(row => {
+                    const columns = row.split(',');
+                    return {
+                        estado: columns[0],
+                        zonal: columns[1],
+                        campus: columns[2],
+                        periodo: parseInt(columns[3]),
+                        inicio: columns[4],
+                        fin: columns[5],
+                        materia: columns[6],
+                        participantes: parseInt(columns[7]) || 0
+                    };
+                }).filter(row => row.zonal && row.periodo);
+            } catch (error) {
+                console.error("Error al cargar los datos:", error);
+            }
+        }
 
-        function processData(data, key) {
-            const counts = data.reduce((acc, item) => {
-                acc[item[key]] = (acc[item[key]] || 0) + 1;
+        function populateFilters() {
+            const periodos = [...new Set(fullData.map(item => item.periodo))].sort((a,b) => b-a);
+            const periodoContainer = document.getElementById('periodo-filter');
+            periodoContainer.innerHTML = '';
+            periodos.forEach((periodo, index) => {
+                const button = document.createElement('button');
+                button.textContent = periodo;
+                button.dataset.periodo = periodo;
+                button.className = `px-4 py-2 text-sm font-medium border-t border-b border-gray-200 ${index === 0 ? 'rounded-l-md border-l' : ''} ${index === periodos.length - 1 ? 'rounded-r-md border-r' : 'border-l'}`;
+                if (index === 0) button.classList.add('active');
+                periodoContainer.appendChild(button);
+            });
+
+            const zonales = ['Todos los Zonales', ...new Set(fullData.map(item => item.zonal))].sort();
+            const zonalFilter = document.getElementById('zonal-filter');
+            zonalFilter.innerHTML = zonales.map(z => `<option value="${z}">${z}</option>`).join('');
+            
+            updateCampusFilter();
+        }
+
+        function updateCampusFilter() {
+            const selectedZonal = document.getElementById('zonal-filter').value;
+            const campusFilter = document.getElementById('campus-filter');
+            
+            let campusOptions;
+            if (selectedZonal === 'Todos los Zonales') {
+                campusOptions = ['Todos los Campus'];
+            } else {
+                campusOptions = ['Todos los Campus', ...new Set(fullData.filter(item => item.zonal === selectedZonal).map(item => item.campus))].sort();
+            }
+            
+            campusFilter.innerHTML = campusOptions.map(c => `<option value="${c}">${c}</option>`).join('');
+        }
+
+        function updateDashboard() {
+            const activePeriodoBtn = document.querySelector('#periodo-filter button.active');
+            if (!activePeriodoBtn) return;
+            const selectedPeriodo = parseInt(activePeriodoBtn.dataset.periodo);
+            const selectedZonal = document.getElementById('zonal-filter').value;
+            const selectedCampus = document.getElementById('campus-filter').value;
+
+            const filteredData = fullData.filter(item => {
+                const periodoMatch = item.periodo === selectedPeriodo;
+                const zonalMatch = selectedZonal === 'Todos los Zonales' || item.zonal === selectedZonal;
+                const campusMatch = selectedCampus === 'Todos los Campus' || item.campus === selectedCampus;
+                return periodoMatch && zonalMatch && campusMatch;
+            });
+
+            // Update KPIs
+            const totalParticipantes = filteredData.reduce((sum, item) => sum + item.participantes, 0);
+            document.getElementById('total-participantes').textContent = totalParticipantes.toLocaleString('es-ES');
+            document.getElementById('total-cursos').textContent = filteredData.length.toLocaleString('es-ES');
+
+            // Update Monthly Chart
+            const monthlyData = {};
+            const meses = ["Ene", "Feb", "Mar", "Abr", "May", "Jun", "Jul", "Ago", "Sep", "Oct", "Nov", "Dic"];
+            meses.forEach(m => monthlyData[m] = 0);
+
+            filteredData.forEach(item => {
+                const month = new Date(item.inicio).getMonth();
+                if (!isNaN(month)) {
+                    monthlyData[meses[month]] += item.participantes;
+                }
+            });
+            monthlyChart.data.datasets[0].data = Object.values(monthlyData);
+            monthlyChart.update();
+
+            // Update Materia Chart
+            const materiaData = filteredData.reduce((acc, item) => {
+                acc[item.materia] = (acc[item.materia] || 0) + item.participantes;
                 return acc;
             }, {});
-            const sorted = Object.entries(counts).sort((a, b) => b[1] - a[1]);
-            return {
-                labels: sorted.map(item => item[0]),
-                data: sorted.map(item => item[1]),
-            };
-        }
-        
-        const tooltipTitleCallback = (tooltipItems) => {
-            const item = tooltipItems[0];
-            let label = item.chart.data.labels[item.dataIndex];
-            if (Array.isArray(label)) return label.join(' ');
-            return label;
-        };
+            const sortedMateria = Object.entries(materiaData).sort((a,b) => b[1] - a[1]);
 
-        const commonChartOptions = {
-            responsive: true,
-            maintainAspectRatio: false,
-            plugins: {
-                legend: { position: 'top' },
-                tooltip: { callbacks: { title: tooltipTitleCallback } }
-            },
-            animation: {
-                duration: 800,
-                easing: 'easeInOutQuart'
-            }
-        };
-
-        function updateDashboard(filter = 'all') {
-            const filteredData = filter === 'all' 
-                ? allCustomerData 
-                : allCustomerData.filter(c => c.programa === filter);
-
-            document.getElementById('total-clients').innerText = filteredData.length;
-
-            const countryData = processData(filteredData, 'pais');
-            countryChart.data.labels = countryData.labels;
-            countryChart.data.datasets[0].data = countryData.data;
-            countryChart.update();
-
-            const cityData = processData(filteredData, 'ciudad');
-            cityChart.data.labels = cityData.labels;
-            cityChart.data.datasets[0].data = cityData.data;
-            cityChart.update();
-
-            const continentMap = { 'Brazil': 'South America', 'Venezuela': 'South America', 'Spain': 'Europe', 'Germany': 'Europe', 'UK': 'Europe', 'France': 'Europe', 'Belgium': 'Europe', 'Sweden': 'Europe', 'Mexico': 'North America', 'USA': 'North America' };
-            const customerDataWithContinent = filteredData.map(c => ({...c, continent: continentMap[c.pais] }));
-            const continentData = processData(customerDataWithContinent, 'continent');
-            continentChart.data.labels = continentData.labels;
-            continentChart.data.datasets[0].data = continentData.data;
-            continentChart.update();
-
-            const tableBody = document.getElementById('customerTableBody');
-            tableBody.innerHTML = '';
-            filteredData.forEach(customer => {
-                const row = `<tr>
-                    <td class="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900">${customer.id}</td>
-                    <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">${customer.nombre}</td>
-                    <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">${customer.ciudad}</td>
-                    <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">${customer.pais}</td>
-                    <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">${customer.programa === 'dual' ? 'Programa Dual' : 'Zonal'}</td>
-                </tr>`;
-                tableBody.innerHTML += row;
-            });
+            materiaChart.data.labels = sortedMateria.map(item => item[0]);
+            materiaChart.data.datasets[0].data = sortedMateria.map(item => item[1]);
+            materiaChart.update();
         }
 
         function setupCharts() {
-            countryChart = new Chart(document.getElementById('countryChart'), {
+            Chart.register(ChartDataLabels);
+            Chart.defaults.font.family = "'Inter', sans-serif";
+
+            const monthlyCtx = document.getElementById('monthly-chart').getContext('2d');
+            monthlyChart = new Chart(monthlyCtx, {
                 type: 'bar',
-                data: { labels: [], datasets: [{ label: 'Número de Clientes', data: [], backgroundColor: palette }] },
-                options: { ...commonChartOptions, indexAxis: 'y', plugins: { legend: { display: false }, tooltip: { callbacks: { title: tooltipTitleCallback } } } }
+                data: {
+                    labels: ["Ene", "Feb", "Mar", "Abr", "May", "Jun", "Jul", "Ago", "Sep", "Oct", "Nov", "Dic"],
+                    datasets: [{
+                        label: 'Participantes',
+                        data: [],
+                        backgroundColor: 'rgba(13, 110, 253, 0.7)',
+                        borderColor: 'rgba(13, 110, 253, 1)',
+                        borderWidth: 1,
+                        borderRadius: 5,
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    scales: { y: { beginAtZero: true } },
+                    plugins: { legend: { display: false } }
+                }
             });
 
-            cityChart = new Chart(document.getElementById('cityChart'), {
-                type: 'bar',
-                data: { labels: [], datasets: [{ label: 'Número de Clientes', data: [], backgroundColor: palette }] },
-                options: { ...commonChartOptions, plugins: { legend: { display: false }, tooltip: { callbacks: { title: tooltipTitleCallback } } } }
-            });
-            
-            continentChart = new Chart(document.getElementById('continentChart'), {
+            const materiaCtx = document.getElementById('materia-chart').getContext('2d');
+            materiaChart = new Chart(materiaCtx, {
                 type: 'doughnut',
-                data: { labels: [], datasets: [{ label: 'Clientes por Continente', data: [], backgroundColor: ['#58508d', '#ff6361', '#ffa600'], hoverOffset: 4 }] },
-                options: commonChartOptions
+                data: {
+                    labels: [],
+                    datasets: [{
+                        data: [],
+                        backgroundColor: ['#0d6efd', '#198754', '#ffc107', '#dc3545', '#6c757d', '#0dcaf0'],
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    plugins: {
+                        legend: { position: 'bottom' },
+                        datalabels: {
+                            formatter: (value, ctx) => {
+                                const sum = ctx.chart.data.datasets[0].data.reduce((a, b) => a + b, 0);
+                                const percentage = (value / sum * 100).toFixed(1) + '%';
+                                return percentage;
+                            },
+                            color: '#fff',
+                            font: { weight: 'bold' }
+                        }
+                    }
+                }
             });
         }
-        
-        document.addEventListener('DOMContentLoaded', () => {
-            setupCharts();
-            updateDashboard('all');
 
-            const filterButtons = document.querySelectorAll('.filter-btn');
-            filterButtons.forEach(button => {
-                button.addEventListener('click', (e) => {
-                    filterButtons.forEach(btn => btn.classList.remove('active'));
-                    e.currentTarget.classList.add('active');
-                    const filter = e.currentTarget.dataset.filter;
-                    updateDashboard(filter);
-                });
+        document.addEventListener('DOMContentLoaded', async () => {
+            setupCharts();
+            await fetchData();
+            populateFilters();
+            updateDashboard();
+
+            document.getElementById('periodo-filter').addEventListener('click', (e) => {
+                if(e.target.tagName === 'BUTTON') {
+                    document.querySelectorAll('#periodo-filter button').forEach(btn => btn.classList.remove('active'));
+                    e.target.classList.add('active');
+                    updateDashboard();
+                }
             });
+            document.getElementById('zonal-filter').addEventListener('change', () => {
+                updateCampusFilter();
+                updateDashboard();
+            });
+            document.getElementById('campus-filter').addEventListener('change', updateDashboard);
         });
     </script>
 </body>
 </html>
+
